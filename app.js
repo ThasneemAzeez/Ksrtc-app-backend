@@ -4,6 +4,7 @@ const cors = require("cors")
 const {ksrtcmodel} = require("./models/ksrtc")
 const bcrypt = require("bcryptjs")
 const jwt =require("jsonwebtoken")
+const {addbusmodel}=require("./models/addBus")
 
 
 mongoose.connect("mongodb+srv://thasneemazeez:thasneem38@cluster0.uk9okno.mongodb.net/ksrtcdb?retryWrites=true&w=majority&appName=Cluster0")
@@ -17,6 +18,29 @@ const generateHashedPassword = async (password) => {
     return bcrypt.hash(password, salt)
 }
 
+app.get("/",(req,res)=>{
+    res.send("hello")
+})
+
+app.post("/add",(req,res)=>{
+    let input=req.body
+    let addbus=new addbusmodel(input)
+    addbus.save()
+    res.json({"status":"success"})
+    
+})
+
+app.post("/search",(req,res)=>{
+    let input=req.body
+    addbusmodel.find(input).then(
+        (data)=>{
+            res.json(data)
+        }
+    ).catch((error)=>{
+        res.json(error)
+    })
+})
+
 
 app.post("/signup", async (req, res) => {
     let input = req.body
@@ -29,6 +53,8 @@ app.post("/signup", async (req, res) => {
     blog.save()
     res.json({ "status": "success" })
 })
+
+
 
 app.post("/signin", (req, res) => {
     //checking email is correct or not if yes it will go to login page or user not found
