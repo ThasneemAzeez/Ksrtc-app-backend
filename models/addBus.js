@@ -7,3 +7,5 @@ const schema=mongoose.Schema(
         
     }
 )
+let addbusmodel=mongoose.model("addbuses",schema)
+module.exports={addbusmodel}
