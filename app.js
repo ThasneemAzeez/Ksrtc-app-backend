@@ -41,7 +41,7 @@ app.post("/signin", (req, res) => {
                     //checking our password and crypted password same crypted always have different values to make it equal
                    bcrypt.compare(input.password,dbPassword,(error,isMatch)=>{
                     if (isMatch) {
-                        jwt.sign({email:input.email},"blog-app" ,{expiresIn:"2d"},(error,token)=>{
+                        jwt.sign({email:input.email},"ksrtc-app" ,{expiresIn:"2d"},(error,token)=>{
                             if (error) {
                                 res.json({"status":"unable to create token"})
                             } else {
@@ -58,6 +58,25 @@ app.post("/signin", (req, res) => {
                     res.json({ "status": "user not found" })
                 }
             })
+    })
+ 
+    app.post("/viewusers",(req,res)=>{
+        let token = req.headers["token"]
+        jwt.verify(token,"ksrtc-app",(error,decoded)=>{
+            if (error) {
+                res.json({"status":"unauthorized access"})
+            } else {
+                if(decoded)
+                    {
+                        ksrtcmodel.find().then(
+                            (response)=>{
+                                res.json(response)
+                            }
+                        ).catch()
+                    }
+            }
+        })
+        
     })
     
 
